@@ -13,7 +13,7 @@ namespace Subscriber
 
             using (var bus = RabbitHutch.CreateBus("host=localhost"))
             {
-                bus.Subscribe<TextMessage>("subscriber" + id, HandleTextMessage);
+                bus.PubSub.Subscribe<TextMessage>("subscriber" + id, HandleTextMessage);
 
                 Console.WriteLine("Listening for messages. Hit <return> to quit.");
                 Console.ReadLine();
