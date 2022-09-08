@@ -1,30 +1,20 @@
-﻿using System;
-using EasyNetQ;
+﻿using EasyNetQ;
 using Messages;
 
-namespace Subscriber
+Console.WriteLine("Enter subscriber id:");
+string id = Console.ReadLine();
+
+using (var bus = RabbitHutch.CreateBus("host=localhost"))
 {
-    class Subscriber
-    {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Enter subscriber id:");
-            string id = Console.ReadLine();
+    bus.PubSub.Subscribe<TextMessage>("subscriber" + id, HandleTextMessage);
 
-            using (var bus = RabbitHutch.CreateBus("host=localhost"))
-            {
-                bus.PubSub.Subscribe<TextMessage>("subscriber" + id, HandleTextMessage);
+    Console.WriteLine("Listening for messages. Hit <return> to quit.");
+    Console.ReadLine();
+}
 
-                Console.WriteLine("Listening for messages. Hit <return> to quit.");
-                Console.ReadLine();
-            }
-        }
-
-        static void HandleTextMessage(TextMessage textMessage)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Got message: {0}", textMessage.Text);
-            Console.ResetColor();
-        }
-    }
+static void HandleTextMessage(TextMessage textMessage)
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine("Got message: {0}", textMessage.Text);
+    Console.ResetColor();
 }
